@@ -1,4 +1,6 @@
 // ====================== SUPERADMIN PAGE JAVASCRIPT ======================
+const apiBaseUrl = "https://thesis-server-5qig.onrender.com";
+
 // Main js for superadmin page
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("accessToken");
@@ -118,7 +120,7 @@ async function loadSectionData(section) {
 // ====================== DASHBOARD ======================
 async function loadDashboardStats() {
     try {
-        const response = await fetch("http://localhost:1804/api/superadmin/dashboard/stats", {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/dashboard/stats`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -153,7 +155,7 @@ async function loadDashboardStats() {
 // ====================== USER MANAGEMENT ======================
 async function loadUsers() {
     try {
-        const response = await fetch("http://localhost:1804/api/superadmin/users", {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/users`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -307,7 +309,7 @@ async function submitAddUser() {
     };
 
     try {
-        const response = await fetch("http://localhost:1804/api/superadmin/users", {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/users`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -335,7 +337,7 @@ async function submitAddUser() {
 // ====================== EDIT USER ======================
 async function openEditUserModal(userId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/superadmin/users/${userId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/users/${userId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -442,7 +444,7 @@ async function submitEditUser() {
     };
 
     try {
-        const response = await fetch(`http://localhost:1804/api/superadmin/users/${userId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/users/${userId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -474,7 +476,7 @@ async function deleteUser(userId, userName) {
     }
 
     try {
-        const response = await fetch(`http://localhost:1804/api/superadmin/users/${userId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/users/${userId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
@@ -501,7 +503,7 @@ async function deleteUser(userId, userName) {
 // ====================== PERIOD MANAGEMENT ======================
 async function loadAcademicYears() {
     try {
-        const response = await fetch("http://localhost:1804/api/superadmin/academic-years", {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/academic-years`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -547,7 +549,7 @@ function displayAcademicYears(years) {
 
 async function loadEvaluationPeriods() {
     try {
-        const response = await fetch("http://localhost:1804/api/superadmin/evaluation-periods", {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/evaluation-periods`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -631,7 +633,7 @@ async function submitAddAcademicYear() {
     };
 
     try {
-        const response = await fetch("http://localhost:1804/api/superadmin/academic-years", {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/academic-years`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -667,7 +669,7 @@ async function updateYearStatus(yearId, yearCode) {
     }
 
     try {
-        const response = await fetch(`http://localhost:1804/api/superadmin/academic-years/${yearId}/status`, {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/academic-years/${yearId}/status`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -694,7 +696,7 @@ async function updateYearStatus(yearId, yearCode) {
 async function openAddPeriodModal() {
     // Load academic years for dropdown
     try {
-        const response = await fetch("http://localhost:1804/api/superadmin/academic-years", {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/academic-years`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -732,7 +734,7 @@ async function submitAddPeriod() {
     };
 
     try {
-        const response = await fetch("http://localhost:1804/api/superadmin/evaluation-periods", {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/evaluation-periods`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -768,7 +770,7 @@ async function updatePeriodStatus(periodId, periodName) {
     }
 
     try {
-        const response = await fetch(`http://localhost:1804/api/superadmin/evaluation-periods/${periodId}/status`, {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/evaluation-periods/${periodId}/status`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -794,7 +796,7 @@ async function updatePeriodStatus(periodId, periodName) {
 // ====================== UTILITY FUNCTIONS ======================
 async function loadDepartmentsForSelect(selectId) {
     try {
-        const response = await fetch("http://localhost:1804/api/superadmin/departments", {
+        const response = await fetch(`${apiBaseUrl}/api/superadmin/departments`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
