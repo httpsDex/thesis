@@ -11,6 +11,8 @@ window.MeritSystem = {
     user: null
 };
 
+
+
 // ====================== PERIOD MANAGEMENT ======================
 
 async function initGlobalPeriodSelector(onPeriodChange) {
@@ -22,7 +24,7 @@ async function initGlobalPeriodSelector(onPeriodChange) {
     
     try {
         // Fetch all evaluation periods from API
-        const response = await fetch('http://localhost:1804/api/evaluation-periods', {
+        const response = await fetch(`https://thesis-server-5qig.onrender.com/api/evaluation-periods`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             }
@@ -244,4 +246,3 @@ window.hideLoadingIndicator = hideLoadingIndicator;
 window.showToast = showToast;
 window.showConfirmation = showConfirmation;
 window.confirmDelete = confirmDelete;
-window.confirmFinalize = confirmFinalize;
