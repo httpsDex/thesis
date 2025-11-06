@@ -1,0 +1,247 @@
+// ====================== GLOBAL STATE MANAGEMENT ======================
+/**
+ * Central state object for the Merit System
+ * - currentPeriod: The currently selected evaluation period ID
+ * - notifications: Array of user notifications
+ * - user: Currently logged-in user object
+ */
+window.MeritSystem = {
+    currentPeriod: null,
+    notifications: [],
+    user: null
+};
+
+// ====================== PERIOD MANAGEMENT ======================
+
+async function initGlobalPeriodSelector(onPeriodChange) {
+    const selector = document.getElementById('globalPeriodSelector');
+    if (!selector) {
+        console.warn('Global period selector not found in DOM');
+        return;
+    }
+    
+    try {
+        // Fetch all evaluation periods from API
+        const response = await fetch('http://localhost:1804/api/evaluation-periods', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to load periods');
+        
+        const periods = await response.json();
+        
+        // Populate the dropdown with periods
+        selector.innerHTML = periods.map(period => `
+            <option value="${period.period_id}" ${period.status === 'active' ? 'selected' : ''}>
+                ${period.period_name} ${period.status === 'active' ? '(Active)' : ''}
+            </option>
+        `).join('');
+        
+        // Set current period to the active one (or first period if no active)
+        const activePeriod = periods.find(p => p.status === 'active');
+        window.MeritSystem.currentPeriod = activePeriod ? activePeriod.period_id : (periods[0]?.period_id || 1);
+        
+        // Update selector value
+        selector.value = window.MeritSystem.currentPeriod;
+        
+        // Listen for period changes and call the callback
+        selector.addEventListener('change', async (e) => {
+            const oldPeriod = window.MeritSystem.currentPeriod;
+            window.MeritSystem.currentPeriod = parseInt(e.target.value);
+            
+            console.log(`Period changed from ${oldPeriod} to ${window.MeritSystem.currentPeriod}`);
+            
+            // Show loading indicator while data refreshes
+            showLoadingIndicator();
+            
+            try {
+                // Call the page-specific reload function
+                await onPeriodChange();
+            } catch (error) {
+                console.error('Error reloading page data:', error);
+                showToast('Error loading data for selected period', true);
+            } finally {
+                hideLoadingIndicator();
+            }
+        });
+        
+        // Initial data load
+        await onPeriodChange();
+        
+    } catch (error) {
+        console.error('Error initializing period selector:', error);
+        selector.innerHTML = '<option value="1">Default Period</option>';
+        window.MeritSystem.currentPeriod = 1;
+    }
+}
+
+
+function getCurrentPeriod() {
+    return window.MeritSystem.currentPeriod || 1;
+}
+
+// ====================== UI HELPERS ======================
+/**
+ * Show loading indicator overlay
+ */
+function showLoadingIndicator() {
+    let loader = document.getElementById('globalLoadingIndicator');
+    if (!loader) {
+        loader = document.createElement('div');
+        loader.id = 'globalLoadingIndicator';
+        loader.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        `;
+        loader.innerHTML = `
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="mt-2">Loading period data...</div>
+            </div>
+        `;
+        document.body.appendChild(loader);
+    }
+    loader.style.display = 'flex';
+}
+
+/**
+ * Hide loading indicator overlay
+ */
+function hideLoadingIndicator() {
+    const loader = document.getElementById('globalLoadingIndicator');
+    if (loader) {
+        loader.style.display = 'none';
+    }
+}
+
+
+function showToast(message, isError = false) {
+    const toastElement = document.getElementById("saveToast");
+    if (!toastElement) {
+        console.warn('Toast element not found');
+        return;
+    }
+    
+    const toast = new bootstrap.Toast(toastElement);
+    const toastBody = document.querySelector(".toast-body");
+    
+    toastBody.textContent = message;
+    
+    if (isError) {
+        toastElement.classList.add("bg-danger", "text-white");
+    } else {
+        toastElement.classList.remove("bg-danger", "text-white");
+    }
+    
+    toast.show();
+    
+    // Reset toast styling after it's hidden
+    setTimeout(() => {
+        toastElement.classList.remove("bg-danger", "text-white");
+    }, 3000);
+}
+
+
+
+function showConfirmation(options) {
+    return new Promise((resolve) => {
+        const dialog = document.getElementById('confirmationDialog');
+        if (!dialog) {
+            // Fallback to native confirm if custom dialog not found
+            resolve(confirm(options.message || 'Are you sure?'));
+            return;
+        }
+        
+        const icon = document.getElementById('confirmIcon');
+        const title = document.getElementById('confirmTitle');
+        const message = document.getElementById('confirmMessage');
+        const confirmBtn = document.getElementById('confirmButton');
+        
+        // Set icon type (warning, danger, info)
+        icon.className = `confirmation-icon ${options.type || 'warning'}`;
+        const iconMap = {
+            warning: 'fa-exclamation-triangle',
+            danger: 'fa-trash-alt',
+            info: 'fa-info-circle'
+        };
+        icon.querySelector('i').className = `fas ${iconMap[options.type || 'warning']}`;
+        
+        // Set content
+        title.textContent = options.title || 'Confirm Action';
+        message.textContent = options.message || 'Are you sure you want to proceed?';
+        confirmBtn.textContent = options.confirmText || 'Confirm';
+        confirmBtn.className = `btn ${options.confirmClass || 'btn-primary'}`;
+        
+        // Show dialog
+        dialog.classList.add('show');
+        
+        // Handle confirmation
+        confirmBtn.onclick = () => {
+            dialog.classList.remove('show');
+            resolve(true);
+        };
+        
+        // Handle cancellation
+        window.closeConfirmation = () => {
+            dialog.classList.remove('show');
+            resolve(false);
+        };
+        
+        // Close on background click
+        dialog.onclick = (e) => {
+            if (e.target === dialog) {
+                closeConfirmation();
+            }
+        };
+    });
+}
+
+/**
+ * Helper for delete confirmations
+ */
+async function confirmDelete(itemName) {
+    return await showConfirmation({
+        type: 'danger',
+        title: 'Delete Confirmation',
+        message: `Are you sure you want to delete ${itemName}? This action cannot be undone.`,
+        confirmText: 'Delete',
+        confirmClass: 'btn-danger'
+    });
+}
+
+/**
+ * Helper for finalize confirmations
+ */
+async function confirmFinalize(periodName) {
+    return await showConfirmation({
+        type: 'warning',
+        title: 'Finalize Period',
+        message: `Are you sure you want to finalize ${periodName}? This will lock all evaluations for this period.`,
+        confirmText: 'Finalize',
+        confirmClass: 'btn-warning'
+    });
+}
+
+
+// ====================== EXPORTS ======================
+// Make functions available globally
+window.initGlobalPeriodSelector = initGlobalPeriodSelector;
+window.getCurrentPeriod = getCurrentPeriod;
+window.showLoadingIndicator = showLoadingIndicator;
+window.hideLoadingIndicator = hideLoadingIndicator;
+window.showToast = showToast;
+window.showConfirmation = showConfirmation;
+window.confirmDelete = confirmDelete;
+window.confirmFinalize = confirmFinalize;
