@@ -1,5 +1,8 @@
 // ====================== ADMIN PAGE JAVASCRIPT ======================
 // Main js for adminpage
+const apiBaseUrl = "https://thesis-server-5qig.onrender.com";
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("accessToken");
     const user = JSON.parse(localStorage.getItem("user"));
@@ -213,7 +216,7 @@ async function loadDashboardData() {
 // Load Quick Statistics
 async function loadDashboardStatistics(periodId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/dashboard/statistics/${periodId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/dashboard/statistics/${periodId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -236,7 +239,7 @@ async function loadDashboardStatistics(periodId) {
 // Load Evaluation Progress
 async function loadEvaluationProgress(periodId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/dashboard/progress/${periodId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/dashboard/progress/${periodId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -310,7 +313,7 @@ async function loadEvaluationProgress(periodId) {
 // Load Recent Activity
 async function loadRecentActivity(periodId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/dashboard/recent-activity/${periodId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/dashboard/recent-activity/${periodId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -446,7 +449,7 @@ async function loadEvaluationData() {
         const periodId = getCurrentPeriod();
         
 
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -457,7 +460,7 @@ async function loadEvaluationData() {
         const buttonStatus = currentPeriod?.status;
         
         // Fetch evaluations
-        const response = await fetch(`http://localhost:1804/api/teaching-evaluations/${periodId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/teaching-evaluations/${periodId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -547,7 +550,7 @@ async function openTeachingEvaluationModal(staffId, evaluationId) {
     // Load existing evaluation if exists
     if (evaluationId) {
         try {
-            const response = await fetch(`http://localhost:1804/api/teaching-evaluation/${evaluationId}`, {
+            const response = await fetch(`${apiBaseUrl}/api/teaching-evaluation/${evaluationId}`, {
                 headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
             });
             
@@ -627,7 +630,7 @@ async function saveTeachingEvaluation() {
     };
     
     try {
-        const response = await fetch(`http://localhost:1804/api/teaching-evaluation/save`, {
+        const response = await fetch(`${apiBaseUrl}/api/teaching-evaluation/save`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -658,7 +661,7 @@ async function loadNonTeachingEvaluationData() {
         const periodId = getCurrentPeriod();
         
         // ✅ Fetch period info to check if it's active
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -669,7 +672,7 @@ async function loadNonTeachingEvaluationData() {
         const buttonStatus = currentPeriod?.status;
         
         // Fetch evaluations
-        const response = await fetch(`http://localhost:1804/api/non-teaching-evaluations/${periodId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-evaluations/${periodId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -790,7 +793,7 @@ async function openNonTeachingEvaluationModal(staffId, evaluationId) {
     // Load existing evaluation if exists
     if (evaluationId) {
         try {
-            const response = await fetch(`http://localhost:1804/api/non-teaching-evaluation/${evaluationId}`, {
+            const response = await fetch(`${apiBaseUrl}/api/non-teaching-evaluation/${evaluationId}`, {
                 headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
             });
             
@@ -822,7 +825,7 @@ async function openNonTeachingEvaluationModal(staffId, evaluationId) {
 
 async function loadNonTeachingSeminarPoints(staffId, periodId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/seminar-points/${staffId}/${periodId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/seminar-points/${staffId}/${periodId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -881,7 +884,7 @@ async function saveNonTeachingEvaluation() {
     };
     
     try {
-        const response = await fetch(`http://localhost:1804/api/non-teaching-evaluation/save`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-evaluation/save`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -910,7 +913,7 @@ async function saveNonTeachingEvaluation() {
 async function loadPeerEvaluationData() {
     try {
         const periodId = getCurrentPeriod();
-        const response = await fetch(`http://localhost:1804/api/peer-evaluations/${periodId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/peer-evaluations/${periodId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -994,7 +997,7 @@ function displayPeerEvaluations(assignments) {
 async function loadPeerAssignmentOptions() {
     try {
         // Load all non-teaching employees
-        const response = await fetch(`http://localhost:1804/api/non-teaching-staff`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-staff`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -1134,7 +1137,7 @@ document.getElementById('savePeerAssignment')?.addEventListener('click', async f
     };
     
     try {
-        const response = await fetch(`http://localhost:1804/api/peer-assignment`, {
+        const response = await fetch(`${apiBaseUrl}/api/peer-assignment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1167,7 +1170,7 @@ document.getElementById('savePeerAssignment')?.addEventListener('click', async f
 // View peer evaluation details
 async function viewPeerEvaluationDetails(evaluateeStaffId, periodId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/peer-evaluation-details/${evaluateeStaffId}/${periodId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/peer-evaluation-details/${evaluateeStaffId}/${periodId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -1420,7 +1423,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Show current period name in the info box
             const currentPeriodId = getCurrentPeriod();
-            const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+            const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
                 headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
             });
             
@@ -1453,7 +1456,7 @@ async function downloadSummaryMeritPay() {
         const periodId = getCurrentPeriod();
         
         // Get current year from period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -1462,7 +1465,7 @@ async function downloadSummaryMeritPay() {
         const yearId = currentPeriod?.year_id || 2;
         
         // Fetch summary data
-        const response = await fetch(`http://localhost:1804/api/teaching-summary-merit-pay/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/teaching-summary-merit-pay/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -1704,7 +1707,7 @@ async function loadTeachingSummaryData() {
         const periodId = getCurrentPeriod();
         
         // Get current year from period
-        const periodResponse = await fetch('http://localhost:1804/api/evaluation-periods', {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -1715,7 +1718,7 @@ async function loadTeachingSummaryData() {
         const yearId = currentPeriod?.year_id || 2;
         
         // Load summary for the year
-        const response = await fetch(`http://localhost:1804/api/teaching-summary/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/teaching-summary/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -1772,7 +1775,7 @@ async function viewTeachingSummary(staffId, academicYear) {
         const periodId = getCurrentPeriod();
         
         // Get year_id from current period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -1781,7 +1784,7 @@ async function viewTeachingSummary(staffId, academicYear) {
         const yearId = currentPeriod?.year_id || 2;
         
         // Fetch detailed evaluation
-        const response = await fetch(`http://localhost:1804/api/teaching-summary/detail/${staffId}/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/teaching-summary/detail/${staffId}/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -1943,7 +1946,7 @@ async function downloadTeachingSummary(staffId) {
         const periodId = getCurrentPeriod();
         
         // Get current year from period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -1952,7 +1955,7 @@ async function downloadTeachingSummary(staffId) {
         const yearId = currentPeriod?.year_id || 2;
         
         // Fetch summary data
-        const response = await fetch(`http://localhost:1804/api/teaching-summary/detail/${staffId}/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/teaching-summary/detail/${staffId}/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -2318,7 +2321,7 @@ async function loadNonTeachingSummaryData() {
         const periodId = getCurrentPeriod();
         
         // Get year from period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -2328,7 +2331,7 @@ async function loadNonTeachingSummaryData() {
         const currentPeriod = periods.find(p => p.period_id == periodId);
         const yearId = currentPeriod?.year_id || 2;
         
-        const response = await fetch(`http://localhost:1804/api/non-teaching-summary/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-summary/${yearId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -2391,7 +2394,7 @@ async function viewNonTeachingSummary(staffId) {
         const periodId = getCurrentPeriod();
         
         // Get year_id from current period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -2400,7 +2403,7 @@ async function viewNonTeachingSummary(staffId) {
         const yearId = currentPeriod?.year_id || 2;
         
         // Fetch detailed summary
-        const response = await fetch(`http://localhost:1804/api/non-teaching-summary/detail/${staffId}/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-summary/detail/${staffId}/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -2579,7 +2582,7 @@ async function downloadNonTeachingSummary(staffId) {
         const periodId = getCurrentPeriod();
         
         // Get year_id from current period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -2588,7 +2591,7 @@ async function downloadNonTeachingSummary(staffId) {
         const yearId = currentPeriod?.year_id || 2;
         
         // Fetch detailed summary
-        const response = await fetch(`http://localhost:1804/api/non-teaching-summary/detail/${staffId}/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-summary/detail/${staffId}/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3099,7 +3102,7 @@ async function loadTeachingRankingData() {
         const periodId = getCurrentPeriod();
         
         // Get current year from period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3109,7 +3112,7 @@ async function loadTeachingRankingData() {
         const currentPeriod = periods.find(p => p.period_id == periodId);
         const yearId = currentPeriod?.year_id || 2;
 
-        const response = await fetch(`http://localhost:1804/api/teaching-rankings/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/teaching-rankings/${yearId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -3170,7 +3173,7 @@ async function viewTeachingRankingHistory(staffId) {
         const periodId = getCurrentPeriod();
         
         // Get current year from period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3178,7 +3181,7 @@ async function viewTeachingRankingHistory(staffId) {
         const currentPeriod = periods.find(p => p.period_id == periodId);
         const yearId = currentPeriod?.year_id;
 
-        const response = await fetch(`http://localhost:1804/api/teaching-ranking-history/${staffId}/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/teaching-ranking-history/${staffId}/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3281,7 +3284,7 @@ async function downloadRankingHistory(staffId) {
         const periodId = getCurrentPeriod();
         
         // Get current year from period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3289,7 +3292,7 @@ async function downloadRankingHistory(staffId) {
         const currentPeriod = periods.find(p => p.period_id == periodId);
         const yearId = currentPeriod?.year_id;
 
-        const response = await fetch(`http://localhost:1804/api/teaching-ranking-history/${staffId}/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/teaching-ranking-history/${staffId}/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3664,7 +3667,7 @@ async function loadNonTeachingRankingData() {
         const periodId = getCurrentPeriod();
         
         // Get year from period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3674,7 +3677,7 @@ async function loadNonTeachingRankingData() {
         const currentPeriod = periods.find(p => p.period_id == periodId);
         const yearId = currentPeriod?.year_id || 2;
         
-        const response = await fetch(`http://localhost:1804/api/non-teaching-rankings/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-rankings/${yearId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -3735,7 +3738,7 @@ async function viewNonTeachingRankingHistory(staffId) {
         const periodId = getCurrentPeriod();
         
         // Get current year from period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3743,7 +3746,7 @@ async function viewNonTeachingRankingHistory(staffId) {
         const currentPeriod = periods.find(p => p.period_id == periodId);
         const yearId = currentPeriod?.year_id || 2;
         
-        const response = await fetch(`http://localhost:1804/api/non-teaching-ranking-history/${staffId}/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-ranking-history/${staffId}/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3883,7 +3886,7 @@ async function downloadNonTeachingRankingHistory(staffId) {
         const periodId = getCurrentPeriod();
         
         // Get current year from period
-        const periodResponse = await fetch(`http://localhost:1804/api/evaluation-periods`, {
+        const periodResponse = await fetch(`${apiBaseUrl}/api/evaluation-periods`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -3891,7 +3894,7 @@ async function downloadNonTeachingRankingHistory(staffId) {
         const currentPeriod = periods.find(p => p.period_id == periodId);
         const yearId = currentPeriod?.year_id || 2;
         
-        const response = await fetch(`http://localhost:1804/api/non-teaching-ranking-history/${staffId}/${yearId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-ranking-history/${staffId}/${yearId}`, {
             headers: { "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
         });
         
@@ -4093,7 +4096,7 @@ async function loadTeachingCertificateData() {
         const periodId = getCurrentPeriod();
         const typeFilter = document.getElementById('certificateTypeFilter')?.value || '';
         
-        let url = `http://localhost:1804/api/teaching-certificates/${periodId}`;
+        let url = `${apiBaseUrl}/api/teaching-certificates/${periodId}`;
         if (typeFilter && typeFilter !== 'All Types') {
             url += `?type=${typeFilter}`;
         }
@@ -4193,7 +4196,7 @@ function displayTeachingCertificates(certificates) {
 
 async function viewCertificateDetails(certificateId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/certificate/${certificateId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/certificate/${certificateId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -4279,7 +4282,7 @@ function populateCertificateModal(cert) {
 
 async function updateCertificateStatus(certificateId, status) {
     try {
-        const response = await fetch(`http://localhost:1804/api/certificate/${certificateId}/status`, {
+        const response = await fetch(`${apiBaseUrl}/api/certificate/${certificateId}/status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -4335,7 +4338,7 @@ async function loadNonTeachingCertificateData() {
         const periodId = getCurrentPeriod();
         const typeFilter = document.getElementById('certificateTypeFilter')?.value || '';
         
-        let url = `http://localhost:1804/api/non-teaching-certificates/${periodId}`;
+        let url = `${apiBaseUrl}/api/non-teaching-certificates/${periodId}`;
         if (typeFilter && typeFilter !== '') {
             url += `?type=${typeFilter}`;
         }
@@ -4433,7 +4436,7 @@ function displayNonTeachingCertificates(certificates) {
 
 async function viewNonTeachingCertificateDetails(certificateId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/certificate/${certificateId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/certificate/${certificateId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -4519,7 +4522,7 @@ function populateNonTeachingCertificateModal(cert) {
 
 async function updateNonTeachingCertificateStatus(certificateId, status) {
     try {
-        const response = await fetch(`http://localhost:1804/api/non-teaching-certificate/${certificateId}/status`, {
+        const response = await fetch(`${apiBaseUrl}/api/non-teaching-certificate/${certificateId}/status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -4569,7 +4572,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Employee Management - Does NOT use period filtering
 async function loadEmployeeData() {
     try {
-        const response = await fetch(`http://localhost:1804/api/employees-management`, {
+        const response = await fetch(`${apiBaseUrl}/api/employees-management`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -4650,7 +4653,7 @@ function displayEmployeeData(employees) {
 // Load departments for the add employee modal
 async function loadDepartmentsForModal() {
     try {
-        const response = await fetch(`http://localhost:1804/api/departments`, {
+        const response = await fetch(`${apiBaseUrl}/api/departments`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -4703,7 +4706,7 @@ document.getElementById('saveEmployeeBtn')?.addEventListener('click', async func
     };
     
     try {
-        const response = await fetch(`http://localhost:1804/api/employees`, {
+        const response = await fetch(`${apiBaseUrl}/api/employees`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -4741,7 +4744,7 @@ if (addEmployeeModal) {
 // Open Edit Employee Modal
 async function openEditEmployeeModal(staffId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/employees/${staffId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/employees/${staffId}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -4770,7 +4773,7 @@ async function openEditEmployeeModal(staffId) {
 
 async function loadDepartmentsForEdit() {
     try {
-        const response = await fetch(`http://localhost:1804/api/departments`, {
+        const response = await fetch(`${apiBaseUrl}/api/departments`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             }
@@ -4806,7 +4809,7 @@ document.getElementById('updateEmployeeBtn')?.addEventListener('click', async fu
     };
     
     try {
-        const response = await fetch(`http://localhost:1804/api/employees/${staffId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/employees/${staffId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -4836,7 +4839,7 @@ async function archiveEmployee(staffId, employeeName) {
     }
     
     try {
-        const response = await fetch(`http://localhost:1804/api/employees/${staffId}/archive`, {
+        const response = await fetch(`${apiBaseUrl}/api/employees/${staffId}/archive`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -4860,7 +4863,7 @@ async function archiveEmployee(staffId, employeeName) {
 // Unarchive Employee
 async function unarchiveEmployee(staffId) {
     try {
-        const response = await fetch(`http://localhost:1804/api/employees/${staffId}/unarchive`, {
+        const response = await fetch(`${apiBaseUrl}/api/employees/${staffId}/unarchive`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
