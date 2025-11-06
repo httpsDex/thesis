@@ -40,10 +40,10 @@ app.use(logger);
 
 // Database connection
 const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "new_testing"
+    host: "bdd2ul7fixoasvh5cx8w-mysql.services.clever-cloud.com",
+    user: "uiawqnq4vw9cisif",
+    password: "uTjoJEueeUW6embTjqlE",
+    database: "bdd2ul7fixoasvh5cx8w"
 });
 
 connection.connect((err) => {
@@ -5656,4 +5656,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`🔗 http://localhost:${PORT}`);
+
 });
